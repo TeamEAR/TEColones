@@ -20,7 +20,8 @@ BEGIN
 		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
 		ROLLBACK TRANSACTION
 	END CATCH
-  
+
+RETURN @IdTipoMaterial
 END
 GO
 
@@ -92,7 +93,8 @@ BEGIN
 		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
 		ROLLBACK TRANSACTION
 	END CATCH
-  
+
+RETURN @IdTipoBeneficio 
 END
 GO
 
@@ -141,7 +143,8 @@ BEGIN
 		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
 		ROLLBACK TRANSACTION
 	END CATCH
-  
+ 
+RETURN @IdPromocion
 END
 GO
 
@@ -198,14 +201,15 @@ BEGIN
 	BEGIN TRY
 		INSERT INTO InformacionBasica(Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, IdTipoRol)
 		VALUES (@Nombre, @PrimerApellido, @SegundoApellido, @Identificacion, @Correo, @Contraseña, @IdTipoRol)
-		SET @IdInformacionBasica= SCOPE_IDENTITY()
+		SET @IdInformacionBasica= SCOPE_IDENTITY() --@@IDENTITY
 		COMMIT TRANSACTION
 	END TRY
 	BEGIN CATCH
 		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
 		ROLLBACK TRANSACTION
 	END CATCH
-  
+
+RETURN @IdInformacionBasica
 END
 GO
 
