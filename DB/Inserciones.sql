@@ -22,6 +22,7 @@ EXEC InsertarSedeXTEC 'Alajuela','Dirección de la Sede'
 EXEC InsertarSedeXTEC 'Cartago','Dirección de la Sede'
 SELECT * FROM SedeXTEC
 
+--Insertar Estudiantes
 EXEC InsertarEstudiante 'Erick', 'Carballo', 'Porras','2015000001','erick@gmail.com','123123','Estudiante','2018-11-10','Cantar','Cartago'
 EXEC InsertarEstudiante 'Allan Eduardo','Chacon','Sandoval','2015000002','allan@gmail.com','741741','Estudiante','2018-11-10','Leer','Cartago'
 EXEC InsertarEstudiante 'Jose Pablo','Vindas','Campos','2015000003','Vindas@gmail.com','789789','Estudiante','2018-11-10','Jugar','Cartago'
