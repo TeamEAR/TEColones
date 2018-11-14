@@ -171,7 +171,7 @@ GO
 
 
 -- =============================================
--- Descripcion:	<Insertar parametros en la Tabla InformacionBasica>
+-- Descripcion:	<Insertar parametros en la Tabla InformacionBasica AUXILIAR>
 -- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, NombreRol>
 -- Parámetro de Salida: <IdInformacionBasica>
 -- =============================================
@@ -293,7 +293,7 @@ BEGIN
 END
 GO
 
---
+
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla Administrador>
 -- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, NombreRol, NombreDepartamento>
@@ -337,3 +337,269 @@ BEGIN
 END
 GO
 
+
+-- =============================================
+-- Descripcion:	<Insertar parametros en la Tabla CentroAcopio>
+-- Parámetro de Entrada: <NombreSede, Ubicacion>
+-- Parámetro de Salida: <Ninguno>
+-- =============================================
+CREATE OR ALTER PROCEDURE InsertaCentroAcopio
+	@NombreSede varchar(30),
+	@Ubicacion varchar(10),
+	@Identificador varchar(8)
+	 
+AS
+BEGIN
+	DECLARE
+	@IdSedeXTEC int
+
+
+	SELECT @IdSedeXTEC = SedeXTEC.IdSedeXTEC FROM SedeXTEC
+	WHERE @NombreSede = SedeXTEC.NombreSedeXTEC;
+
+	BEGIN TRAN
+	BEGIN TRY
+		INSERT INTO CentroAcopio(IdSedeXTEC, Ubicacion, Identificador)  VALUES (@IdSedeXTEC, @Ubicacion, @Identificador);
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
+		ROLLBACK TRANSACTION
+	END CATCH
+  
+END
+GO
+
+
+-- =============================================
+-- Descripcion:	<Insertar parametros en la Tabla EncargadoCentroAcopio>
+-- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, NombreRol, IdentificadorCentroAcopio>
+-- Parámetro de Salida: <Ninguno>
+-- =============================================
+CREATE OR ALTER PROCEDURE InsertarAdministrador
+	@Nombre varchar(50),
+	@PrimerApellido varchar(25),
+	@SegundoApellido varchar(25),
+	@Identificacion varchar(10),
+	@Correo varchar(100),
+	@Contraseña varchar(50),
+	@NombreRol varchar(25),
+	
+	@IdentificadorCentroAcopio varchar(50)
+	
+	 
+AS
+BEGIN
+	DECLARE
+	@IdCentroAcopio int,
+	@IdInformacionBasica int
+
+	SELECT @IdCentroAcopio = CentroAcopio.IdCentroAcopio FROM CentroAcopio
+	WHERE @IdentificadorCentroAcopio = CentroAcopio.Identificador
+	
+
+	BEGIN TRAN
+	BEGIN TRY
+
+		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @Contraseña, @NombreRol, @IdInformacionBasica
+
+		INSERT INTO EncargadoCentroAcopio(IdInformacionBasica, IdCentroAcopio) VALUES (@IdInformacionBasica, @IdCentroAcopio)
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
+		ROLLBACK TRANSACTION
+	END CATCH
+  
+END
+GO
+
+
+-- =============================================
+-- Descripcion:	<Insertar parametros en la Tabla HistorialTipoMaterial y TipoMaterial>
+-- Parámetro de Entrada: <NombreMaterial, CaracteristicaMaterial, Identificacion, EquivalenciaTEColones, PesoBaseMaterial, FechaModificacion>
+-- Parámetro de Salida: <Ninguno>
+-- =============================================
+CREATE OR ALTER PROCEDURE NuevoTipoMaterial
+	@NombreTipoMaterial varchar(30),
+	@CaracteristicaMaterial varchar(150),
+	@Identificacion varchar(10),
+	@EquivalenciaTEColones float,
+	@PesoBaseMaterial float,
+	@FechaModificacion date,
+	@DetalleModificacion varchar(200)
+
+	
+	 
+AS
+BEGIN
+	DECLARE
+	@IdTipoMaterial int,
+	@IdAdmi int
+	
+
+	SELECT @IdAdmi =  InformacionBasica.IdInformacionBasica FROM InformacionBasica
+	--INNER JOIN Administrador ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
+	WHERE @Identificacion = InformacionBasica.Identificacion
+
+	BEGIN TRAN
+	BEGIN TRY
+
+		EXEC @IdTipoMaterial = InsertarTipoMaterial @NombreTipoMaterial, @CaracteristicaMaterial, @IdTipoMaterial
+
+		INSERT INTO HistorialTipoMaterial(IdTipoMaterial, IdAdmi, EquivalenciaTecolones, PesoBaseMaterial, FechaModificacion, DetalleModificacion) 
+		VALUES (@IdTipoMaterial, @IdAdmi, @EquivalenciaTEColones, @PesoBaseMaterial, @FechaModificacion, @DetalleModificacion)
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
+		ROLLBACK TRANSACTION
+	END CATCH
+  
+END
+GO
+
+
+-- =============================================
+-- Descripcion:	<Insertar parametros en la Tabla HistorialTipoBeneficio y TipoBeneficio>
+-- Parámetro de Entrada: <NombreBeneficio, DescripcionBeneficio, Identificacion, CantidadBaseTecolones, EquivalenciaColones, FechaModificacion, DetalleModificacion>
+-- Parámetro de Salida: <Ninguno>
+-- =============================================
+CREATE OR ALTER PROCEDURE NuevoTipoBeneficio
+	@NombreBeneficio varchar(30),
+	@DescripcionBeneficio varchar(150),
+	@Identificacion varchar(10),
+	@CantidadBaseTEColones float,
+	@EquivalenciaColones float,
+	@FechaModificacion date,
+	@DetalleModificacion varchar(200)
+
+	
+	 
+AS
+BEGIN
+	DECLARE
+	@IdTipoBeneficio int,
+	@IdAdmi int
+	
+
+	SELECT @IdAdmi =  InformacionBasica.IdInformacionBasica FROM InformacionBasica
+	--INNER JOIN Administrador ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
+	WHERE @Identificacion = InformacionBasica.Identificacion
+
+	BEGIN TRAN
+	BEGIN TRY
+
+		EXEC @IdTipoBeneficio = InsertarTipoBeneficio @NombreBeneficio, @DescripcionBeneficio, @IdTipoBeneficio
+
+		INSERT INTO HistorialTipoBeneficio(IdTipoBeneficio, IdAdmi, CantidadBaseTecolones, EquivalenciaColones, FechaModificacion, DetalleModificacion) 
+		VALUES (@IdTipoBeneficio, @IdAdmi, @CantidadBaseTEColones, @EquivalenciaColones, @FechaModificacion, @DetalleModificacion)
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
+		ROLLBACK TRANSACTION
+	END CATCH
+  
+END
+GO
+
+
+-- =============================================
+-- Descripcion:	<Insertar parametros en la Tabla HistorialPromocion y Promocion>
+-- Parámetro de Entrada: <NombrePromocion, DescripcionPromocion, Identificacion, FechaInicio, FechaFin, FechaModificacion, DetalleModificacion>
+-- Parámetro de Salida: <Ninguno>
+-- =============================================
+CREATE OR ALTER PROCEDURE NuevaPromocion
+	@NombrePromocion varchar(50),
+	@DescripcionPromocion varchar(150),
+	@Identificacion varchar(10),
+	@FechaInicio datetime,
+	@FechaFin datetime,
+	@FechaModificacion date,
+	@DetalleModificacion varchar(200)
+
+	
+	 
+AS
+BEGIN
+	DECLARE
+	@IdPromocion int,
+	@IdAdmi int
+	
+
+	SELECT @IdAdmi =  InformacionBasica.IdInformacionBasica FROM InformacionBasica
+	--INNER JOIN Administrador ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
+	WHERE @Identificacion = InformacionBasica.Identificacion
+
+	BEGIN TRAN
+	BEGIN TRY
+
+		EXEC @IdPromocion = InsertarPromocion @NombrePromocion, @DescripcionPromocion, @IdPromocion
+
+		INSERT INTO HistorialTipoBeneficio(IdTipoBeneficio, IdAdmi, CantidadBaseTecolones, EquivalenciaColones, FechaModificacion, DetalleModificacion) 
+		VALUES (@IdPromocion, @IdAdmi, @FechaInicio, @FechaFin, @FechaModificacion, @DetalleModificacion)
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
+		ROLLBACK TRANSACTION
+	END CATCH
+  
+END
+GO
+
+
+-- =============================================
+-- Descripcion:	<Insertar parametros en la Tabla CambioMaterialEstudiante>
+-- Parámetro de Entrada: <>
+-- Parámetro de Salida: <Ninguno>
+-- =============================================
+CREATE OR ALTER PROCEDURE CambioMaterial
+	@IdentificacionEstudiante varchar(10),
+	@DIdentificadorCentroAcopio varchar(8),
+	@IdentificacionEncargado varchar(10),
+	@TipoMaterial varchar(25),
+	@FechaCambio date,
+	@PesoCambio float,
+	@TecolonesAdquiridos float
+
+	
+	 
+AS
+BEGIN
+	DECLARE
+	@IdPromocion int,
+	@IdEstudiante int,
+	@IdEncargadoCentroAcopio int,
+	@IdCambioActual int
+	
+
+	SELECT @IdEstudiante = InformacionBasica.IdInformacionBasica FROM InformacionBasica
+	WHERE @IdentificacionEstudiante = InformacionBasica.Identificacion
+
+	SELECT @IdEncargadoCentroAcopio = InformacionBasica.IdInformacionBasica FROM InformacionBasica
+	WHERE @IdentificacionEncargado = InformacionBasica.Identificacion
+
+	SELECT @IdPromocion = HistorialPromocion.IdHistorialPromocion FROM HistorialPromocion
+	WHERE @FechaCambio BETWEEN HistorialPromocion.FechaInicio AND HistorialPromocion.FechaFin
+
+	SELECT @IdCambioActual = HistorialTipoMaterial.IdHistorialTipoMaterial FROM HistorialTipoMaterial
+	INNER JOIN TipoMaterial ON HistorialTipoMaterial.IdTipoMaterial = TipoMaterial.IdTipoMaterial
+	WHERE HistorialTipoMaterial.FechaModificacion =(SELECT MAX(HistorialTipoMaterial.FechaModificacion) FROM HistorialPromocion
+	WHERE @TipoMaterial = TipoMaterial.NombreTipoMaterial)
+
+	BEGIN TRAN
+	BEGIN TRY
+
+		INSERT INTO CambioMaterialEstudiante(IdHistorialTipoMaterial, IdEstudiante, IdEncargadoCentroAcopio, IdHistorialPromocion, FechaCambio, PesoReciclaje, TecolonesAdquiridos) 
+		VALUES (@IdCambioActual, @IdEstudiante, @IdEncargadoCentroAcopio, @IdPromocion, @FechaCambio, @PesoCambio, @TecolonesAdquiridos)
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
+		ROLLBACK TRANSACTION
+	END CATCH
+  
+END
+GO
