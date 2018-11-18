@@ -7,7 +7,8 @@
 CREATE OR ALTER PROCEDURE InsertarTipoMaterial
 	@NombreTipoMaterial varchar(30),
 	@CaracteristicaMaterial varchar(150),
-	@IdTipoMaterial int Output 
+	@IdTipoMaterial int Output
+
 AS
 BEGIN
 	BEGIN TRAN
@@ -32,7 +33,8 @@ GO
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarDepartamento 
-	@NombreDepartamento varchar(50) 
+	@NombreDepartamento varchar(50)
+
 AS
 BEGIN
 	BEGIN TRAN
@@ -55,7 +57,8 @@ GO
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarTipoRol 
-	@NombreRol varchar(25) 
+	@NombreRol varchar(25)
+
 AS
 BEGIN
 	BEGIN TRAN
@@ -81,6 +84,7 @@ CREATE OR ALTER PROCEDURE InsertarTipoBeneficio
 	@NombreBeneficio varchar(30),
 	@DescripcionBeneficio varchar(150),
 	@IdTipoBeneficio int OutPut
+
 AS
 BEGIN
 	BEGIN TRAN
@@ -105,7 +109,8 @@ GO
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarTipoContacto 
-	@NombreTipoContacto varchar(20) 
+	@NombreTipoContacto varchar(20)
+
 AS
 BEGIN
 	BEGIN TRAN
@@ -131,6 +136,7 @@ CREATE OR ALTER PROCEDURE InsertarPromocion
 	@NombrePromocion varchar(50),
 	@DescripcionPromocion varchar(150),
 	@IdPromocion int OutPut
+
 AS
 BEGIN
 	BEGIN TRAN
@@ -156,12 +162,49 @@ GO
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarSedeXTEC
 	@NombreSedeXTEC varchar(50),
-	@UbicacionSede varchar(100) 
+	@UbicacionSede varchar(100)
+	 
 AS
 BEGIN
 	BEGIN TRAN
 	BEGIN TRY
 		INSERT INTO SedeXTEC(NombreSedeXTEC, UbicacionSede) VALUES (@NombreSedeXTEC, @UbicacionSede)
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
+		ROLLBACK TRANSACTION
+	END CATCH
+  
+END
+GO
+
+
+-- =============================================
+-- Descripcion:	<Insertar parametros en la Tabla EstudianteContacto>
+-- Parámetro de Entrada: <Contacto, Carnet, TipoContacto>
+-- Parámetro de Salida: <Ninguno>
+-- =============================================
+CREATE OR ALTER PROCEDURE InsertarContacto
+	@Contacto varchar(50),
+	@Identificacion varchar(10),
+	@TipoContacto varchar(20)
+	 
+AS
+BEGIN
+	DECLARE
+	@IdIdentificacion int,
+	@IdTipoContacto int
+ 
+	SELECT @IdIdentificacion = InformacionBasica.IdInformacionBasica FROM InformacionBasica
+	WHERE @Identificacion = InformacionBasica.Identificacion;
+
+	SELECT @IdTipoContacto = TipoContacto.IdTipoContacto FROM TipoContacto
+	WHERE @TipoContacto = TipoContacto.NombreTipoContacto;
+
+	BEGIN TRAN
+	BEGIN TRY
+		INSERT INTO InformacionBasicaContacto(IdInformacionBasica, IdTipoContacto, Contacto)  VALUES (@IdIdentificacion, @IdTipoContacto, @Contacto)
 		COMMIT TRANSACTION
 	END TRY
 	BEGIN CATCH
@@ -183,8 +226,9 @@ CREATE OR ALTER PROCEDURE InsertarInformacionBasica
 	@PrimerApellido varchar(25),
 	@SegundoApellido varchar(25),
 	@Identificacion varchar(10),
-	@Correo varchar(100),
+	@Correo varchar(50),
 	@Contraseña varchar(50),
+	@Telefono varchar (50),
 	@NombreRol varchar(25),
 	@IdInformacionBasica int OutPut
 	 
@@ -193,15 +237,16 @@ BEGIN
 	DECLARE
 	@IdTipoRol int
 
-
 	SELECT @IdTipoRol = TipoRol.IdTipoRol FROM TipoRol
 	WHERE @NombreRol = TipoRol.NombreRol;
 
 	BEGIN TRAN
 	BEGIN TRY
-		INSERT INTO InformacionBasica(Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, IdTipoRol)
-		VALUES (@Nombre, @PrimerApellido, @SegundoApellido, @Identificacion, @Correo, @Contraseña, @IdTipoRol)
+		INSERT INTO InformacionBasica(Nombre, PrimerApellido, SegundoApellido, Identificacion, Contraseña, IdTipoRol)
+		VALUES (@Nombre, @PrimerApellido, @SegundoApellido, @Identificacion, @Contraseña, @IdTipoRol)
 		SET @IdInformacionBasica= SCOPE_IDENTITY() --@@IDENTITY
+		EXEC InsertarContacto @Telefono, @Identificacion, 'Celular'
+		EXEC InsertarContacto @Correo, @Identificacion, 'Correo'
 		COMMIT TRANSACTION
 	END TRY
 	BEGIN CATCH
@@ -226,13 +271,13 @@ CREATE OR ALTER PROCEDURE InsertarEstudiante
 	@Identificacion varchar(10),
 	@Correo varchar(100),
 	@Contraseña varchar(50),
+	@Telefono varchar (50),
 	@NombreRol varchar(25),
 	
 	@FechaIncorporacion date,
 	@Pasatiempo text,
 	@NombreSedeXTEC varchar(50)
-	
-	 
+		 
 AS
 BEGIN
 	DECLARE
@@ -242,51 +287,10 @@ BEGIN
 	SELECT @IdSedeXTEC = SedeXTEC.IdSedeXTEC FROM SedeXTEC
 	WHERE @NombreSedeXTEC = SedeXTEC.NombreSedeXTEC
 	
-
 	BEGIN TRAN
 	BEGIN TRY
-
-		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @Contraseña, @NombreRol, @IdInformacionBasica
-
+		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @Contraseña, @Telefono, @NombreRol, @IdInformacionBasica
 		INSERT INTO Estudiante(FechaIncorporacion, Pasatiempo, IdSedeXTEC, IdInformacionBasica) VALUES (@FechaIncorporacion, @Pasatiempo, @IdSedeXTEC, @IdInformacionBasica)
-		COMMIT TRANSACTION
-	END TRY
-	BEGIN CATCH
-		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
-		ROLLBACK TRANSACTION
-	END CATCH
-  
-END
-GO
-
-
--- =============================================
--- Descripcion:	<Insertar parametros en la Tabla EstudianteContacto>
--- Parámetro de Entrada: <Contacto, Carnet, TipoContacto>
--- Parámetro de Salida: <Ninguno>
--- =============================================
-CREATE OR ALTER PROCEDURE InsertaEstudianteContacto
-	@Contacto varchar(30),
-	@Carnet varchar(10),
-	@TipoContacto varchar(20)
-	 
-AS
-BEGIN
-	DECLARE
-	@IdEstudiante int,
-	@IdTipoContacto int
-
-
-	SELECT @IdEstudiante = Estudiante.IdEstudiante FROM Estudiante
-	INNER JOIN InformacionBasica ON Estudiante.IdInformacionBasica = InformacionBasica.IdInformacionBasica
-	WHERE @Carnet = InformacionBasica.Identificacion;
-
-	SELECT @IdTipoContacto = TipoContacto.IdTipoContacto FROM TipoContacto
-	WHERE @TipoContacto = TipoContacto.NombreTipoContacto;
-
-	BEGIN TRAN
-	BEGIN TRY
-		INSERT INTO EstudianteContacto(IdEstudiante, IdTipoContacto, Contacto)  VALUES (@IdEstudiante, @IdTipoContacto, @Contacto);
 		COMMIT TRANSACTION
 	END TRY
 	BEGIN CATCH
@@ -310,10 +314,10 @@ CREATE OR ALTER PROCEDURE InsertarAdministrador
 	@Identificacion varchar(10),
 	@Correo varchar(100),
 	@Contraseña varchar(50),
+	@Telefono varchar(50),
 	@NombreRol varchar(25),
 	
 	@NombreDepartamento varchar(50)
-	
 	 
 AS
 BEGIN
@@ -323,13 +327,11 @@ BEGIN
 
 	SELECT @IdDepartamento = Departamento.IdDepartamento FROM Departamento
 	WHERE @NombreDepartamento = Departamento.NombreDepartamento
-	
 
 	BEGIN TRAN
 	BEGIN TRY
 
-		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @Contraseña, @NombreRol, @IdInformacionBasica
-
+		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @Contraseña, @Telefono, @NombreRol, @IdInformacionBasica
 		INSERT INTO Administrador(IdDepartamento, IdInformacionBasica) VALUES (@IdDepartamento, @IdInformacionBasica)
 		COMMIT TRANSACTION
 	END TRY
@@ -347,7 +349,7 @@ GO
 -- Parámetro de Entrada: <NombreSede, Ubicacion>
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
-CREATE OR ALTER PROCEDURE InsertaCentroAcopio
+CREATE OR ALTER PROCEDURE InsertarCentroAcopio
 	@NombreSede varchar(30),
 	@Ubicacion varchar(10),
 	@Identificador varchar(8)
@@ -356,7 +358,6 @@ AS
 BEGIN
 	DECLARE
 	@IdSedeXTEC int
-
 
 	SELECT @IdSedeXTEC = SedeXTEC.IdSedeXTEC FROM SedeXTEC
 	WHERE @NombreSede = SedeXTEC.NombreSedeXTEC;
@@ -380,18 +381,18 @@ GO
 -- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, NombreRol, IdentificadorCentroAcopio>
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
-CREATE OR ALTER PROCEDURE InsertarAdministrador
+CREATE OR ALTER PROCEDURE InsertarAdministradorAcopio
 	@Nombre varchar(50),
 	@PrimerApellido varchar(25),
 	@SegundoApellido varchar(25),
 	@Identificacion varchar(10),
 	@Correo varchar(100),
 	@Contraseña varchar(50),
+	@Telefono varchar(50),
 	@NombreRol varchar(25),
 	
 	@IdentificadorCentroAcopio varchar(50)
-	
-	 
+		 
 AS
 BEGIN
 	DECLARE
@@ -401,12 +402,9 @@ BEGIN
 	SELECT @IdCentroAcopio = CentroAcopio.IdCentroAcopio FROM CentroAcopio
 	WHERE @IdentificadorCentroAcopio = CentroAcopio.Identificador
 	
-
 	BEGIN TRAN
 	BEGIN TRY
-
-		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @Contraseña, @NombreRol, @IdInformacionBasica
-
+		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @Contraseña, @Telefono, @NombreRol, @IdInformacionBasica
 		INSERT INTO EncargadoCentroAcopio(IdInformacionBasica, IdCentroAcopio) VALUES (@IdInformacionBasica, @IdCentroAcopio)
 		COMMIT TRANSACTION
 	END TRY
@@ -428,12 +426,49 @@ CREATE OR ALTER PROCEDURE NuevoTipoMaterial
 	@NombreTipoMaterial varchar(30),
 	@CaracteristicaMaterial varchar(150),
 	@Identificacion varchar(10),
-	@EquivalenciaTEColones float,
 	@PesoBaseMaterial float,
+	@EquivalenciaTEColones float,
 	@FechaModificacion date,
 	@DetalleModificacion varchar(200)
 
-	
+AS
+BEGIN
+	DECLARE
+	@IdTipoMaterial int,
+	@IdAdmi int
+
+	SELECT @IdAdmi =  Administrador.IdAdmi FROM Administrador
+	INNER JOIN InformacionBasica ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
+	WHERE @Identificacion = InformacionBasica.Identificacion
+
+	BEGIN TRAN
+	BEGIN TRY
+		EXEC @IdTipoMaterial = InsertarTipoMaterial @NombreTipoMaterial, @CaracteristicaMaterial, @IdTipoMaterial
+		INSERT INTO HistorialTipoMaterial(IdTipoMaterial, IdAdmi, EquivalenciaTecolones, PesoBaseMaterial, FechaModificacion, DetalleModificacion) 
+		VALUES (@IdTipoMaterial, @IdAdmi, @EquivalenciaTEColones, @PesoBaseMaterial, @FechaModificacion, @DetalleModificacion)
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
+		ROLLBACK TRANSACTION
+	END CATCH
+  
+END
+GO
+
+
+-- =============================================
+-- Descripcion:	<Insertar parametros en la Tabla HistorialTipoMaterial (MODIFICAR MATERIAL)>
+-- Parámetro de Entrada: <NombreMaterial, Identificacion, EquivalenciaTEColones, PesoBaseMaterial, FechaModificacion>
+-- Parámetro de Salida: <Ninguno>
+-- =============================================
+CREATE OR ALTER PROCEDURE ModificacionMaterial
+	@NombreTipoMaterial varchar(30),
+	@Identificacion varchar(10),
+	@PesoBaseMaterial float,
+	@EquivalenciaTEColones float,
+	@FechaModificacion date,
+	@DetalleModificacion varchar(200)
 	 
 AS
 BEGIN
@@ -441,16 +476,15 @@ BEGIN
 	@IdTipoMaterial int,
 	@IdAdmi int
 	
-
-	SELECT @IdAdmi =  InformacionBasica.IdInformacionBasica FROM InformacionBasica
-	--INNER JOIN Administrador ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
+	SELECT @IdAdmi =  Administrador.IdAdmi FROM Administrador
+	INNER JOIN InformacionBasica ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
 	WHERE @Identificacion = InformacionBasica.Identificacion
+
+	SELECT @IdTipoMaterial = TipoMaterial.IdTipoMaterial FROM TipoMaterial
+	WHERE @NombreTipoMaterial = TipoMaterial.NombreTipoMaterial
 
 	BEGIN TRAN
 	BEGIN TRY
-
-		EXEC @IdTipoMaterial = InsertarTipoMaterial @NombreTipoMaterial, @CaracteristicaMaterial, @IdTipoMaterial
-
 		INSERT INTO HistorialTipoMaterial(IdTipoMaterial, IdAdmi, EquivalenciaTecolones, PesoBaseMaterial, FechaModificacion, DetalleModificacion) 
 		VALUES (@IdTipoMaterial, @IdAdmi, @EquivalenciaTEColones, @PesoBaseMaterial, @FechaModificacion, @DetalleModificacion)
 		COMMIT TRANSACTION
@@ -477,8 +511,44 @@ CREATE OR ALTER PROCEDURE NuevoTipoBeneficio
 	@EquivalenciaColones float,
 	@FechaModificacion date,
 	@DetalleModificacion varchar(200)
+	 
+AS
+BEGIN
+	DECLARE
+	@IdTipoBeneficio int,
+	@IdAdmi int
 
-	
+	SELECT @IdAdmi =  Administrador.IdAdmi FROM Administrador
+	INNER JOIN InformacionBasica ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
+	WHERE @Identificacion = InformacionBasica.Identificacion
+
+	BEGIN TRAN
+	BEGIN TRY
+		EXEC @IdTipoBeneficio = InsertarTipoBeneficio @NombreBeneficio, @DescripcionBeneficio, @IdTipoBeneficio
+		INSERT INTO HistorialTipoBeneficio(IdTipoBeneficio, IdAdmi, CantidadBaseTecolones, EquivalenciaColones, FechaModificacion, DetalleModificacion) 
+		VALUES (@IdTipoBeneficio, @IdAdmi, @CantidadBaseTEColones, @EquivalenciaColones, @FechaModificacion, @DetalleModificacion)
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
+		ROLLBACK TRANSACTION
+	END CATCH
+  
+END
+GO
+
+
+-- Descripcion:	<Insertar parametros en la Tabla HistorialTipoBeneficio(MODIFICAR BENEFICIO)>
+-- Parámetro de Entrada: <NombreBeneficio, Identificacion, CantidadBaseTecolones, EquivalenciaColones, FechaModificacion, DetalleModificacion>
+-- Parámetro de Salida: <Ninguno>
+-- =============================================
+CREATE OR ALTER PROCEDURE ModificacionBeneficio
+	@NombreBeneficio varchar(30),
+	@Identificacion varchar(10),
+	@CantidadBaseTEColones float,
+	@EquivalenciaColones float,
+	@FechaModificacion date,
+	@DetalleModificacion varchar(200)
 	 
 AS
 BEGIN
@@ -486,16 +556,15 @@ BEGIN
 	@IdTipoBeneficio int,
 	@IdAdmi int
 	
-
-	SELECT @IdAdmi =  InformacionBasica.IdInformacionBasica FROM InformacionBasica
-	--INNER JOIN Administrador ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
+	SELECT @IdAdmi =  Administrador.IdAdmi FROM Administrador
+	INNER JOIN InformacionBasica ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
 	WHERE @Identificacion = InformacionBasica.Identificacion
+
+	SELECT @IdTipoBeneficio = TipoBeneficio.IdTipoBeneficio FROM TipoBeneficio
+	WHERE @NombreBeneficio = TipoBeneficio.NombreBeneficio
 
 	BEGIN TRAN
 	BEGIN TRY
-
-		EXEC @IdTipoBeneficio = InsertarTipoBeneficio @NombreBeneficio, @DescripcionBeneficio, @IdTipoBeneficio
-
 		INSERT INTO HistorialTipoBeneficio(IdTipoBeneficio, IdAdmi, CantidadBaseTecolones, EquivalenciaColones, FechaModificacion, DetalleModificacion) 
 		VALUES (@IdTipoBeneficio, @IdAdmi, @CantidadBaseTEColones, @EquivalenciaColones, @FechaModificacion, @DetalleModificacion)
 		COMMIT TRANSACTION
@@ -522,26 +591,21 @@ CREATE OR ALTER PROCEDURE NuevaPromocion
 	@FechaFin datetime,
 	@FechaModificacion date,
 	@DetalleModificacion varchar(200)
-
-	
 	 
 AS
 BEGIN
 	DECLARE
 	@IdPromocion int,
 	@IdAdmi int
-	
 
-	SELECT @IdAdmi =  InformacionBasica.IdInformacionBasica FROM InformacionBasica
-	--INNER JOIN Administrador ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
+	SELECT @IdAdmi =  Administrador.IdAdmi FROM Administrador
+	INNER JOIN InformacionBasica ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
 	WHERE @Identificacion = InformacionBasica.Identificacion
 
 	BEGIN TRAN
 	BEGIN TRY
-
 		EXEC @IdPromocion = InsertarPromocion @NombrePromocion, @DescripcionPromocion, @IdPromocion
-
-		INSERT INTO HistorialTipoBeneficio(IdTipoBeneficio, IdAdmi, CantidadBaseTecolones, EquivalenciaColones, FechaModificacion, DetalleModificacion) 
+		INSERT INTO HistorialPromocion(IdPromocion, IdAdmi, FechaInicio, FechaFin, FechaModificacion, DetalleModificacion) 
 		VALUES (@IdPromocion, @IdAdmi, @FechaInicio, @FechaFin, @FechaModificacion, @DetalleModificacion)
 		COMMIT TRANSACTION
 	END TRY
@@ -567,8 +631,6 @@ CREATE OR ALTER PROCEDURE CambioMaterial
 	@FechaCambio date,
 	@PesoCambio float,
 	@TecolonesAdquiridos float
-
-	
 	 
 AS
 BEGIN
@@ -578,7 +640,6 @@ BEGIN
 	@IdEncargadoCentroAcopio int,
 	@IdCambioActual int
 	
-
 	SELECT @IdEstudiante = InformacionBasica.IdInformacionBasica FROM InformacionBasica
 	WHERE @IdentificacionEstudiante = InformacionBasica.Identificacion
 
@@ -595,7 +656,6 @@ BEGIN
 
 	BEGIN TRAN
 	BEGIN TRY
-
 		INSERT INTO CambioMaterialEstudiante(IdHistorialTipoMaterial, IdEstudiante, IdEncargadoCentroAcopio, IdHistorialPromocion, FechaCambio, PesoReciclaje, TecolonesAdquiridos) 
 		VALUES (@IdCambioActual, @IdEstudiante, @IdEncargadoCentroAcopio, @IdPromocion, @FechaCambio, @PesoCambio, @TecolonesAdquiridos)
 		COMMIT TRANSACTION
