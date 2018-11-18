@@ -181,7 +181,7 @@ GO
 
 
 -- =============================================
--- Descripcion:	<Insertar parametros en la Tabla EstudianteContacto>
+-- Descripcion:	<Insertar parametros en la Tabla InformacionBasicaContacto>
 -- Parámetro de Entrada: <Contacto, Carnet, TipoContacto>
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
@@ -218,7 +218,7 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla InformacionBasica AUXILIAR>
--- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, NombreRol>
+-- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, Telefono, NombreRol>
 -- Parámetro de Salida: <IdInformacionBasica>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarInformacionBasica
@@ -261,7 +261,7 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla Estudiante>
--- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, NombreRol, FechaIncorporacion, Pasatiempo, NombreSedeXTEC>
+-- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, Telefono, NombreRol, FechaIncorporacion, Pasatiempo, NombreSedeXTEC>
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarEstudiante
@@ -304,7 +304,7 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla Administrador>
--- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, NombreRol, NombreDepartamento>
+-- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, Telefono, NombreRol, NombreDepartamento>
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarAdministrador
@@ -346,7 +346,7 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla CentroAcopio>
--- Parámetro de Entrada: <NombreSede, Ubicacion>
+-- Parámetro de Entrada: <NombreSede, Ubicacion, Identificador>
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarCentroAcopio
@@ -378,7 +378,7 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla EncargadoCentroAcopio>
--- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, NombreRol, IdentificadorCentroAcopio>
+-- Parámetro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, Telefono,NombreRol, IdentificadorCentroAcopio>
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarAdministradorAcopio
@@ -419,7 +419,7 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla HistorialTipoMaterial y TipoMaterial>
--- Parámetro de Entrada: <NombreMaterial, CaracteristicaMaterial, Identificacion, EquivalenciaTEColones, PesoBaseMaterial, FechaModificacion>
+-- Parámetro de Entrada: <NombreMaterial, CaracteristicaMaterial, Identificacion, EquivalenciaTEColones, PesoBaseMaterial, FechaModificacion, DetalleModificacion>
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE NuevoTipoMaterial
@@ -459,7 +459,7 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla HistorialTipoMaterial (MODIFICAR MATERIAL)>
--- Parámetro de Entrada: <NombreMaterial, Identificacion, EquivalenciaTEColones, PesoBaseMaterial, FechaModificacion>
+-- Parámetro de Entrada: <NombreMaterial, Identificacion, EquivalenciaTEColones, PesoBaseMaterial, FechaModificacion, DetalleModificacion>
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE ModificacionMaterial
@@ -618,9 +618,49 @@ END
 GO
 
 
+-- Descripcion:	<Insertar parametros en la Tabla HistorialPromocion(MODIFICAR PROMOCION)>
+-- Parámetro de Entrada: <NombrePromocion, Identificacion, FechaInicio, FechaFin, FechaModificacion, DetalleModificacion>
+-- Parámetro de Salida: <Ninguno>
+-- =============================================
+CREATE OR ALTER PROCEDURE ModificacionPromocion
+	@NombrePromocion varchar(30),
+	@Identificacion varchar(10),
+	@FechaInicio datetime,
+	@FechaFin datetime,
+	@FechaModificacion date,
+	@DetalleModificacion varchar(200)
+	 
+AS
+BEGIN
+	DECLARE
+	@IdPromocion int,
+	@IdAdmi int
+	
+	SELECT @IdAdmi =  Administrador.IdAdmi FROM Administrador
+	INNER JOIN InformacionBasica ON Administrador.IdInformacionBasica = InformacionBasica.IdInformacionBasica
+	WHERE @Identificacion = InformacionBasica.Identificacion
+
+	SELECT @IdPromocion = Promocion.IdPromocion FROM Promocion
+	WHERE @NombrePromocion = Promocion.NombrePromocion
+
+	BEGIN TRAN
+	BEGIN TRY
+		INSERT INTO HistorialPromocion(IdPromocion, IdAdmi, FechaInicio, FechaFin, FechaModificacion, DetalleModificacion) 
+		VALUES (@IdPromocion, @IdAdmi, @FechaInicio, @FechaFin, @FechaModificacion, @DetalleModificacion)
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
+		ROLLBACK TRANSACTION
+	END CATCH
+  
+END
+GO
+
+
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla CambioMaterialEstudiante>
--- Parámetro de Entrada: <>
+-- Parámetro de Entrada: <IdentificacionEstudiante, IdentificacionCentroAcopio, IdentificacionEncargado, TipoMaterial, FechaCambio, PesoCambio, TecolonesAdquiridos>
 -- Parámetro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE CambioMaterial
@@ -635,24 +675,34 @@ CREATE OR ALTER PROCEDURE CambioMaterial
 AS
 BEGIN
 	DECLARE
-	@IdPromocion int,
+	@IdPromocion int = 0,
 	@IdEstudiante int,
 	@IdEncargadoCentroAcopio int,
 	@IdCambioActual int
 	
-	SELECT @IdEstudiante = InformacionBasica.IdInformacionBasica FROM InformacionBasica
+	SELECT @IdEstudiante = Estudiante.IdEstudiante FROM Estudiante
+	INNER JOIN InformacionBasica ON Estudiante.IdInformacionBasica = InformacionBasica.IdInformacionBasica
 	WHERE @IdentificacionEstudiante = InformacionBasica.Identificacion
 
-	SELECT @IdEncargadoCentroAcopio = InformacionBasica.IdInformacionBasica FROM InformacionBasica
+	SELECT @IdEncargadoCentroAcopio = EncargadoCentroAcopio.IdEncargadoCentroAcopio FROM EncargadoCentroAcopio
+	INNER JOIN InformacionBasica ON EncargadoCentroAcopio.IdInformacionBasica = InformacionBasica.IdInformacionBasica
 	WHERE @IdentificacionEncargado = InformacionBasica.Identificacion
 
 	SELECT @IdPromocion = HistorialPromocion.IdHistorialPromocion FROM HistorialPromocion
 	WHERE @FechaCambio BETWEEN HistorialPromocion.FechaInicio AND HistorialPromocion.FechaFin
 
+	IF @IdPromocion = 0
+	BEGIN
+		SELECT @IdPromocion = HistorialPromocion.IdHistorialPromocion FROM HistorialPromocion WHERE HistorialPromocion.IdHistorialPromocion = 1;
+	END
+	
 	SELECT @IdCambioActual = HistorialTipoMaterial.IdHistorialTipoMaterial FROM HistorialTipoMaterial
 	INNER JOIN TipoMaterial ON HistorialTipoMaterial.IdTipoMaterial = TipoMaterial.IdTipoMaterial
-	WHERE HistorialTipoMaterial.FechaModificacion =(SELECT MAX(HistorialTipoMaterial.FechaModificacion) FROM HistorialPromocion
-	WHERE @TipoMaterial = TipoMaterial.NombreTipoMaterial)
+	WHERE HistorialTipoMaterial.FechaModificacion =
+		(SELECT MAX(HistorialTipoMaterial.FechaModificacion) FROM HistorialTipoMaterial
+		INNER JOIN TipoMaterial ON HistorialTipoMaterial.IdTipoMaterial = TipoMaterial.IdTipoMaterial
+		WHERE @TipoMaterial= TipoMaterial.NombreTipoMaterial)
+	AND @TipoMaterial= TipoMaterial.NombreTipoMaterial
 
 	BEGIN TRAN
 	BEGIN TRY
@@ -667,3 +717,49 @@ BEGIN
   
 END
 GO
+
+
+-- =============================================
+-- Descripcion:	<Insertar parametros en la Tabla CambioBeneficioEstudiante>
+-- Parámetro de Entrada: <IdentificacionEstudiante, TipoBeneficio, TecolonesCambio, ColonesAdquiridos, FechaCambio>
+-- Parámetro de Salida: <Ninguno>
+-- =============================================
+CREATE OR ALTER PROCEDURE CambioBeneficio
+	@IdentificacionEstudiante varchar(10),
+	@TipoBeneficio varchar (30),
+	@TecolonesCambio float,
+	@ColonesAdquiridos float,
+	@FechaCambio date
+	
+AS
+BEGIN
+	DECLARE
+	@IdEstudiante int,
+	@IdCambioActual int
+	
+	SELECT @IdEstudiante = Estudiante.IdEstudiante FROM Estudiante
+	INNER JOIN InformacionBasica ON Estudiante.IdInformacionBasica = InformacionBasica.IdInformacionBasica
+	WHERE @IdentificacionEstudiante = InformacionBasica.Identificacion
+	
+	SELECT @IdCambioActual = HistorialTipoBeneficio.IdHistorialTipoBeneficio FROM HistorialTipoBeneficio
+	INNER JOIN TipoBeneficio ON HistorialTipoBeneficio.IdTipoBeneficio = TipoBeneficio.IdTipoBeneficio
+	WHERE HistorialTipoBeneficio.FechaModificacion =
+		(SELECT MAX(HistorialTipoMaterial.FechaModificacion) FROM HistorialTipoMaterial
+		INNER JOIN TipoMaterial ON HistorialTipoMaterial.IdTipoMaterial = TipoMaterial.IdTipoMaterial
+		WHERE @TipoBeneficio= TipoMaterial.NombreTipoMaterial)
+	AND @TipoBeneficio= TipoBeneficio.NombreBeneficio
+
+	BEGIN TRAN
+	BEGIN TRY
+		INSERT INTO CambioBeneficioEstudiante(IdHistorialTipoBeneficio, IdEstudiante, TecolonesCambio, ColonesAdquiridos, FechaCambio) 
+		VALUES (@IdCambioActual, @IdEstudiante, @TecolonesCambio, @ColonesAdquiridos, @FechaCambio)
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		SELECT ERROR_PROCEDURE() AS ErrorProcedimiento, ERROR_MESSAGE() AS TipoError
+		ROLLBACK TRANSACTION
+	END CATCH
+  
+END
+GO
+
