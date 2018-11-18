@@ -1,3 +1,4 @@
+/*
 --Insertar Departamentos
 EXEC InsertarDepartamento 'Financiero Contable'
 EXEC InsertarDepartamento 'Auditoria'
@@ -72,13 +73,58 @@ EXEC InsertarAdministradorAcopio 'Juan','Diaz','Chacon','1203010458','jd@hotmail
 EXEC InsertarAdministradorAcopio 'Silvia','Alfaro','Campos','7810002365','silviac@hotmail.com','052525','85889966','EncargadoCentroAcopio','CA5'
 
 
---2012-06-15
+--2012-06-15 Formato fecha
 --Insertar NuevoMaterial
-EXEC NuevoTipoMaterial 'Papel','Todo tipo de papel','3052968981','0.5','2','18-11-17','Creacion Material'
-EXEC NuevoTipoMaterial 'Plastico','Todo tipo de plastico','3052968981','0.5','3','18-11-17','Creacion Material'
-EXEC NuevoTipoMaterial 'Carton','Todo tipo de carton','3052968981','0.2','1','18-11-17','Creacion Material'
-EXEC NuevoTipoMaterial 'Vidrio','Todo tipo de vidrio','3052968981','0.7','2','18-11-17','Creacion Material'
+EXEC NuevoTipoMaterial 'Papel','Todo tipo de papel','3052968981','0.5','2','17-11-18','Creacion Material'
+EXEC NuevoTipoMaterial 'Plastico','Todo tipo de plastico','3052968981','0.5','3','17-11-18','Creacion Material'
+EXEC NuevoTipoMaterial 'Carton','Todo tipo de carton','3052968981','0.2','1','17-11-18','Creacion Material'
+EXEC NuevoTipoMaterial 'Vidrio','Todo tipo de vidrio','3052968981','0.7','2','17-11-18','Creacion Material'
+
+--Modificar Material
+EXEC ModificacionMaterial 'Papel','3052968981','0.5','4','18-11-18','Mod. (0.5-2)-(0.5-4)'
+EXEC ModificacionMaterial 'Vidrio','3052968981','1','2','18-11-18','Mod. (0.7-2)-(1-2)'
 
 --Insertar NuevoBeneficio
-EXEC NuevoTipoBeneficio 'Matricula','Descuento en el pago de creditos','3052968981','10','1','18-11-17','Creacion de beneficio'
-EXEC NuevoTipoBeneficio 'ComedorInstitucional','Descuento en el pago de comedor','3052968981','10','1','18-11-17','Creacion de beneficio'
+EXEC NuevoTipoBeneficio 'Matricula','Descuento en el pago de creditos','3052968981','10','1','17-11-18','Creacion de beneficio'
+EXEC NuevoTipoBeneficio 'ComedorInstitucional','Descuento en el pago de comedor','3052968981','10','1','17-11-18','Creacion de beneficio'
+
+--Modificar Beneficio
+EXEC ModificacionBeneficio 'Matricula','3052968981','15','1','18-11-18','Mod. (10-1)-(15-1)'
+
+--Insertar NuevaPromocion
+EXEC NuevaPromocion 'Sin Promocion','Sin Promocion','3052968981',NULL,NULL,'17-11-18','Creacion Promocion'
+EXEC NuevaPromocion 'Reciclando Papel','Se otorgaran el doble de puntos','3052968981','26-11-18','30-11-18','17-11-18','Creacion Promocion'
+EXEC NuevaPromocion 'Alcanzando la meta','Se debe de alcanzar 3000 TEColones para obtener 10000 puntos adicionales','3052968981','01-02-19','01-04-19','17-11-18','Creacion Promocion'
+EXEC NuevaPromocion 'Sin plastico en la U','Recolectar 5 Kg de plastico para obtener 10000 puntos adicionales','3052968981','01-09-18','01-11-18','17-11-18','Creacion Promocion'
+
+--Modificacion Promocion
+EXEC ModificacionPromocion 'Sin plastico en la U','3052968981','01-02-19','01-04-19','22-12-18','(01-09-18/01-11-18)-(01-02-19/01-04-19)'
+
+-- Insertar IntercambioMaterial
+EXEC CambioMaterial '2015000001','CA1','3227510365','Plastico','19-11-18','2','12'
+EXEC CambioMaterial '2015000001','CA1','3227510365','Papel','19-11-18','3','24'
+EXEC CambioMaterial '2015000001','CA1','3227510365','Vidrio','19-11-18','1','2'
+EXEC CambioMaterial '2015000001','CA2','3103978546','Vidrio','19-11-18','2','4'
+EXEC CambioMaterial '2015000001','CA2','3103978546','Carton','19-11-18','3','15'
+EXEC CambioMaterial '2015000001','CA1','3227510365','Papel','19-11-18','1','16'
+EXEC CambioMaterial '2015000001','CA2','3103978546','Papel','27-11-18','4','64'
+EXEC CambioMaterial '2015000001','CA1','3227510365','Papel','27-11-18','5','80'
+EXEC CambioMaterial '2015000001','CA1','3227510365','Plastico','27-11-18','3','18'
+EXEC CambioMaterial '2015000006','CA4','1203010458','Papel','19-11-18','1','16'
+EXEC CambioMaterial '2015000006','CA4','1203010458','Papel','27-11-18','2','32'
+EXEC CambioMaterial '2015000006','CA4','1203010458','Papel','27-11-18','5','80'
+EXEC CambioMaterial '2015000006','CA4','1203010458','Carton','27-11-18','3','15'
+EXEC CambioMaterial '2015000002','CA2','3103978546','Plastico','19-11-18','1','6'
+EXEC CambioMaterial '2015000002','CA2','3103978546','Papel','27-11-18','2','32'
+EXEC CambioMaterial '2015000002','CA1','3227510365','Vidrio','28-11-18','5','10'
+EXEC CambioMaterial '2015000002','CA2','3103978546','Carton','30-11-18','3','15'
+EXEC CambioMaterial '2015000009','CA5','7810002365','Plastico','18-11-18','1','6'
+EXEC CambioMaterial '2015000009','CA5','7810002365','Papel','20-11-18','2','16'
+EXEC CambioMaterial '2015000009','CA5','7810002365','Vidrio','27-11-18','5','10'
+EXEC CambioMaterial '2015000009','CA5','7810002365','Carton','30-11-18','3','15'
+*/
+
+Select * from HistorialTipoMaterial
+Select * from TipoMaterial
+
+SELECT * FROM HistorialPromocion
