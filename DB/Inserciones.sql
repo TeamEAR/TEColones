@@ -122,9 +122,15 @@ EXEC CambioMaterial '2015000009','CA5','7810002365','Plastico','18-11-18','1','6
 EXEC CambioMaterial '2015000009','CA5','7810002365','Papel','20-11-18','2','16'
 EXEC CambioMaterial '2015000009','CA5','7810002365','Vidrio','27-11-18','5','10'
 EXEC CambioMaterial '2015000009','CA5','7810002365','Carton','30-11-18','3','15'
-*/
 
-Select * from HistorialTipoMaterial
-Select * from TipoMaterial
 
-SELECT * FROM HistorialPromocion
+--Insertar CambioBeneficio
+EXEC CambioBeneficio '2015000001','Matricula','3000','200','19-11-18'
+EXEC CambioBeneficio '2015000001','ComedorInstitucional','1200','120','20-11-18'
+EXEC CambioBeneficio '2015000009','Matricula','4000','400','17-11-18'*/
+
+
+DECLARE  @Prueba varchar(MAX) 
+EXEC RetornaBeneficio  @Prueba output 
+print @Prueba
+
