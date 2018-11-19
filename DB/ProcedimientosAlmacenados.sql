@@ -744,10 +744,10 @@ BEGIN
 	SELECT @IdCambioActual = HistorialTipoBeneficio.IdHistorialTipoBeneficio FROM HistorialTipoBeneficio
 	INNER JOIN TipoBeneficio ON HistorialTipoBeneficio.IdTipoBeneficio = TipoBeneficio.IdTipoBeneficio
 	WHERE HistorialTipoBeneficio.FechaModificacion =
-		(SELECT MAX(HistorialTipoMaterial.FechaModificacion) FROM HistorialTipoMaterial
-		INNER JOIN TipoMaterial ON HistorialTipoMaterial.IdTipoMaterial = TipoMaterial.IdTipoMaterial
-		WHERE @TipoBeneficio= TipoMaterial.NombreTipoMaterial)
-	AND @TipoBeneficio= TipoBeneficio.NombreBeneficio
+		(SELECT MAX(HistorialTipoBeneficio.FechaModificacion) FROM HistorialTipoBeneficio
+		INNER JOIN TipoBeneficio ON HistorialTipoBeneficio.IdTipoBeneficio = TipoBeneficio.IdTipoBeneficio
+		WHERE @TipoBeneficio = TipoBeneficio.NombreBeneficio)
+	AND @TipoBeneficio = TipoBeneficio.NombreBeneficio
 
 	BEGIN TRAN
 	BEGIN TRY
@@ -763,3 +763,16 @@ BEGIN
 END
 GO
 
+
+-- =============================================
+-- Descripcion:	<Retorna los Tipos de Beneficio>
+-- Parámetro de Entrada: <Ninguno>
+-- Parámetro de Salida: <NombreBeneficio>
+-- =============================================
+CREATE OR ALTER PROCEDURE RetornaBeneficio (@NombreBeneficio varchar(MAX) output)
+
+AS
+BEGIN
+	SET @NombreBeneficio = (SELECT TipoBeneficio.NombreBeneficio AS NombreBeneficio FROM TipoBeneficio FOR JSON PATH, ROOT('Prueba'))
+END
+GO
