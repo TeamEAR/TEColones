@@ -1,0 +1,109 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    box-sizing: border-box;
+    border-radius: 5%;
+}
+
+body{
+    background: #DEDEDE;
+    display: flex;
+    min-height: 100vh;
+}
+
+form{
+    margin: auto;
+    width: 50%;
+    max-width: 500px;
+    background: #C2CFF1;
+    padding: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+}
+
+#Registro{
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 50px;
+}
+
+#nombre{
+    display: block;
+    padding: 10px;
+    width: 100%;
+    margin-top: 5%;
+    font-size: 15px;
+}
+
+#primerApellido{
+    display: block;
+    padding: 10px;
+    width: 45%;
+    margin-top: 5%;
+    font-size: 15px;
+    float: left;
+    margin-inline-end: 5%;
+}
+
+#segundoApellido{
+    display: block;
+    padding: 10px;
+    width: 50%;
+    margin-top: 5%;
+    font-size: 15px;
+}
+
+#listBox{
+  width: 45%;
+  font-size: 15px;
+  padding: 10px;
+  margin-top: 5%;
+  float: left;
+  margin-inline-end: 5%;
+}
+
+#carnet{
+  display: block;
+  padding: 10px;
+  width: 50%;
+  margin-top: 5%;
+  font-size: 15px;
+}
+
+#correo{
+  display: block;
+  padding: 10px;
+  width: 100%;
+  margin-top: 5%;
+  font-size: 15px;
+}
+
+#contraseña{
+  display: block;
+  padding: 10px;
+  width: 100%;
+  margin-top: 5%;
+  font-size: 15px;
+}
+
+#telefono{
+  display: block;
+  padding: 10px;
+  width: 100%;
+  margin-top: 5%;
+  font-size: 15px;
+}
+
+input[type="submit"]{
+  display: block;
+  padding: 10px;
+  width: 100%;
+  margin-top: 10%;
+  font-size: 15px;
+  background: #2B82F1;
+  color: #FFFFFF;
+  cursor: pointer;
+}

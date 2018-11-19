@@ -3,12 +3,14 @@
     padding: 0;
     font-family: sans-serif;
     box-sizing: border-box;
+    border-radius: 5%
 }
 
 body{
     background: #DEDEDE;
     display: flex;
     min-height: 100vh;
+
 }
 
 form{
@@ -48,12 +50,12 @@ input{
     padding: 10px;
     width: 100%;
     margin-top: 10%;
-    font-size: 20px; 
+    font-size: 20px;
 }
 
 input[type="submit"]{
     background: #2B82F1;
     color: #FFFFFF;
-    border: 0;
     cursor: pointer;
+    border-radius: 7%;
 }
