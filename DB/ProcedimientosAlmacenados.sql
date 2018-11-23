@@ -1,8 +1,8 @@
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla TipoMaterial AUXILIAR>
--- Parï¿½metro de Entrada: <NombreTipoMaterial, CaracteristicaMaterial>
--- Parï¿½metro de Salida: <IdTipoMaterial>
+-- Parametro de Entrada: <NombreTipoMaterial, CaracteristicaMaterial>
+-- Parametro de Salida: <IdTipoMaterial>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarTipoMaterial
 	@NombreTipoMaterial varchar(30),
@@ -218,8 +218,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla InformacionBasica AUXILIAR>
--- Parametro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contrasena, Telefono, NombreRol>
--- Parï¿½metro de Salida: <IdInformacionBasica>
+-- Parametro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, Telefono, NombreRol>
+-- Parametro de Salida: <IdInformacionBasica>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarInformacionBasica
 	@Nombre varchar(50),
@@ -227,7 +227,7 @@ CREATE OR ALTER PROCEDURE InsertarInformacionBasica
 	@SegundoApellido varchar(25),
 	@Identificacion varchar(10),
 	@Correo varchar(50),
-	@ContraseÃ±a varchar(50),
+	@Contraseña varchar(50),
 	@Telefono varchar (50),
 	@NombreRol varchar(25),
 	@IdInformacionBasica int OutPut
@@ -242,8 +242,8 @@ BEGIN
 
 	BEGIN TRAN
 	BEGIN TRY
-		INSERT INTO InformacionBasica(Nombre, PrimerApellido, SegundoApellido, Identificacion, ContraseÃ±a, IdTipoRol)
-		VALUES (@Nombre, @PrimerApellido, @SegundoApellido, @Identificacion, @ContraseÃ±a, @IdTipoRol)
+		INSERT INTO InformacionBasica(Nombre, PrimerApellido, SegundoApellido, Identificacion, Contraseña, IdTipoRol)
+		VALUES (@Nombre, @PrimerApellido, @SegundoApellido, @Identificacion, @Contraseña, @IdTipoRol)
 		SET @IdInformacionBasica= SCOPE_IDENTITY() --@@IDENTITY
 		EXEC InsertarContacto @Telefono, @Identificacion, 'Celular'
 		EXEC InsertarContacto @Correo, @Identificacion, 'Correo'
@@ -261,8 +261,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla Estudiante>
--- Parï¿½metro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseï¿½a, Telefono, NombreRol, FechaIncorporacion, Pasatiempo, NombreSedeXTEC>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, Telefono, NombreRol, FechaIncorporacion, Pasatiempo, NombreSedeXTEC>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarEstudiante
 	@Nombre varchar(50),
@@ -270,7 +270,7 @@ CREATE OR ALTER PROCEDURE InsertarEstudiante
 	@SegundoApellido varchar(25),
 	@Identificacion varchar(10),
 	@Correo varchar(100),
-	@ContraseÃ±a varchar(50),
+	@Contraseña varchar(50),
 	@Telefono varchar (50),
 	@NombreRol varchar(25),
 	
@@ -289,7 +289,7 @@ BEGIN
 	
 	BEGIN TRAN
 	BEGIN TRY
-		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @ContraseÃ±a, @Telefono, @NombreRol, @IdInformacionBasica
+		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @Contraseña, @Telefono, @NombreRol, @IdInformacionBasica
 		INSERT INTO Estudiante(FechaIncorporacion, Pasatiempo, IdSedeXTEC, IdInformacionBasica) VALUES (@FechaIncorporacion, @Pasatiempo, @IdSedeXTEC, @IdInformacionBasica)
 		COMMIT TRANSACTION
 	END TRY
@@ -304,8 +304,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla Administrador>
--- Parï¿½metro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseï¿½a, Telefono, NombreRol, NombreDepartamento>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, Telefono, NombreRol, NombreDepartamento>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarAdministrador
 	@Nombre varchar(50),
@@ -313,7 +313,7 @@ CREATE OR ALTER PROCEDURE InsertarAdministrador
 	@SegundoApellido varchar(25),
 	@Identificacion varchar(10),
 	@Correo varchar(100),
-	@ContraseÃ±a varchar(50),
+	@Contraseña varchar(50),
 	@Telefono varchar(50),
 	@NombreRol varchar(25),
 	
@@ -331,7 +331,7 @@ BEGIN
 	BEGIN TRAN
 	BEGIN TRY
 
-		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @ContraseÃ±a, @Telefono, @NombreRol, @IdInformacionBasica
+		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @Contraseña, @Telefono, @NombreRol, @IdInformacionBasica
 		INSERT INTO Administrador(IdDepartamento, IdInformacionBasica) VALUES (@IdDepartamento, @IdInformacionBasica)
 		COMMIT TRANSACTION
 	END TRY
@@ -346,8 +346,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla CentroAcopio>
--- Parï¿½metro de Entrada: <NombreSede, Ubicacion, Identificador>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <NombreSede, Ubicacion, Identificador>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarCentroAcopio
 	@NombreSede varchar(30),
@@ -378,8 +378,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla EncargadoCentroAcopio>
--- Parï¿½metro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseï¿½a, Telefono,NombreRol, IdentificadorCentroAcopio>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <Nombre, PrimerApellido, SegundoApellido, Identificacion, Correo, Contraseña, Telefono,NombreRol, IdentificadorCentroAcopio>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE InsertarAdministradorAcopio
 	@Nombre varchar(50),
@@ -387,7 +387,7 @@ CREATE OR ALTER PROCEDURE InsertarAdministradorAcopio
 	@SegundoApellido varchar(25),
 	@Identificacion varchar(10),
 	@Correo varchar(100),
-	@ContraseÃ±a varchar(50),
+	@Contraseña varchar(50),
 	@Telefono varchar(50),
 	@NombreRol varchar(25),
 	
@@ -404,7 +404,7 @@ BEGIN
 	
 	BEGIN TRAN
 	BEGIN TRY
-		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @ContraseÃ±a, @Telefono, @NombreRol, @IdInformacionBasica
+		EXEC @IdInformacionBasica = InsertarInformacionBasica @Nombre, @PrimerApellido, SegundoApellido, @Identificacion, @Correo, @Contraseña, @Telefono, @NombreRol, @IdInformacionBasica
 		INSERT INTO EncargadoCentroAcopio(IdInformacionBasica, IdCentroAcopio) VALUES (@IdInformacionBasica, @IdCentroAcopio)
 		COMMIT TRANSACTION
 	END TRY
@@ -419,8 +419,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla HistorialTipoMaterial y TipoMaterial>
--- Parï¿½metro de Entrada: <NombreMaterial, CaracteristicaMaterial, Identificacion, EquivalenciaTEColones, PesoBaseMaterial, FechaModificacion, DetalleModificacion>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <NombreMaterial, CaracteristicaMaterial, Identificacion, EquivalenciaTEColones, PesoBaseMaterial, FechaModificacion, DetalleModificacion>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE NuevoTipoMaterial
 	@NombreTipoMaterial varchar(30),
@@ -459,8 +459,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla HistorialTipoMaterial (MODIFICAR MATERIAL)>
--- Parï¿½metro de Entrada: <NombreMaterial, Identificacion, EquivalenciaTEColones, PesoBaseMaterial, FechaModificacion, DetalleModificacion>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <NombreMaterial, Identificacion, EquivalenciaTEColones, PesoBaseMaterial, FechaModificacion, DetalleModificacion>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE ModificacionMaterial
 	@NombreTipoMaterial varchar(30),
@@ -500,8 +500,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla HistorialTipoBeneficio y TipoBeneficio>
--- Parï¿½metro de Entrada: <NombreBeneficio, DescripcionBeneficio, Identificacion, CantidadBaseTecolones, EquivalenciaColones, FechaModificacion, DetalleModificacion>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <NombreBeneficio, DescripcionBeneficio, Identificacion, CantidadBaseTecolones, EquivalenciaColones, FechaModificacion, DetalleModificacion>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE NuevoTipoBeneficio
 	@NombreBeneficio varchar(30),
@@ -539,8 +539,8 @@ GO
 
 
 -- Descripcion:	<Insertar parametros en la Tabla HistorialTipoBeneficio(MODIFICAR BENEFICIO)>
--- Parï¿½metro de Entrada: <NombreBeneficio, Identificacion, CantidadBaseTecolones, EquivalenciaColones, FechaModificacion, DetalleModificacion>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <NombreBeneficio, Identificacion, CantidadBaseTecolones, EquivalenciaColones, FechaModificacion, DetalleModificacion>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE ModificacionBeneficio
 	@NombreBeneficio varchar(30),
@@ -580,8 +580,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla HistorialPromocion y Promocion>
--- Parï¿½metro de Entrada: <NombrePromocion, DescripcionPromocion, Identificacion, FechaInicio, FechaFin, FechaModificacion, DetalleModificacion>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <NombrePromocion, DescripcionPromocion, Identificacion, FechaInicio, FechaFin, FechaModificacion, DetalleModificacion>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE NuevaPromocion
 	@NombrePromocion varchar(50),
@@ -619,8 +619,8 @@ GO
 
 
 -- Descripcion:	<Insertar parametros en la Tabla HistorialPromocion(MODIFICAR PROMOCION)>
--- Parï¿½metro de Entrada: <NombrePromocion, Identificacion, FechaInicio, FechaFin, FechaModificacion, DetalleModificacion>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <NombrePromocion, Identificacion, FechaInicio, FechaFin, FechaModificacion, DetalleModificacion>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE ModificacionPromocion
 	@NombrePromocion varchar(30),
@@ -660,8 +660,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla CambioMaterialEstudiante>
--- Parï¿½metro de Entrada: <IdentificacionEstudiante, IdentificacionCentroAcopio, IdentificacionEncargado, TipoMaterial, FechaCambio, PesoCambio, TecolonesAdquiridos>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <IdentificacionEstudiante, IdentificacionCentroAcopio, IdentificacionEncargado, TipoMaterial, FechaCambio, PesoCambio, TecolonesAdquiridos>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE CambioMaterial
 	@IdentificacionEstudiante varchar(10),
@@ -721,8 +721,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Insertar parametros en la Tabla CambioBeneficioEstudiante>
--- Parï¿½metro de Entrada: <IdentificacionEstudiante, TipoBeneficio, TecolonesCambio, ColonesAdquiridos, FechaCambio>
--- Parï¿½metro de Salida: <Ninguno>
+-- Parametro de Entrada: <IdentificacionEstudiante, TipoBeneficio, TecolonesCambio, ColonesAdquiridos, FechaCambio>
+-- Parametro de Salida: <Ninguno>
 -- =============================================
 CREATE OR ALTER PROCEDURE CambioBeneficio
 	@IdentificacionEstudiante varchar(10),
@@ -766,8 +766,8 @@ GO
 
 -- =============================================
 -- Descripcion:	<Retorna los Tipos de Beneficio>
--- Parï¿½metro de Entrada: <Ninguno>
--- Parï¿½metro de Salida: <NombreBeneficio>
+-- Parametro de Entrada: <Ninguno>
+-- Parametro de Salida: <NombreBeneficio>
 -- =============================================
 CREATE OR ALTER PROCEDURE RetornaBeneficio (@NombreBeneficio varchar(MAX) output)
 
