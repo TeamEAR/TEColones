@@ -1,4 +1,4 @@
-
+/*
 --Insertar Departamentos
 EXEC InsertarDepartamento 'Financiero Contable'
 EXEC InsertarDepartamento 'Auditoria'
@@ -17,10 +17,10 @@ EXEC InsertarTipoContacto 'Celular'
 SELECT * FROM TipoContacto
 
 --Insetar SedeXTEC
-EXEC InsertarSedeXTEC 'San Carlos','Direcci贸n de la Sede'
-EXEC InsertarSedeXTEC 'San Jose','Direcci贸n de la Sede'
-EXEC InsertarSedeXTEC 'Alajuela','Direcci贸n de la Sede'
-EXEC InsertarSedeXTEC 'Cartago','Direcci贸n de la Sede'
+EXEC InsertarSedeXTEC 'San Carlos','Direcci髇 de la Sede'
+EXEC InsertarSedeXTEC 'San Jose','Direcci髇 de la Sede'
+EXEC InsertarSedeXTEC 'Alajuela','Direcci髇 de la Sede'
+EXEC InsertarSedeXTEC 'Cartago','Direcci髇 de la Sede'
 SELECT * FROM SedeXTEC
 
 --Insertar Estudiantes
@@ -127,7 +127,7 @@ EXEC CambioMaterial '2015000009','CA5','7810002365','Carton','30-11-18','3','15'
 --Insertar CambioBeneficio
 EXEC CambioBeneficio '2015000001','Matricula','3000','200','19-11-18'
 EXEC CambioBeneficio '2015000001','ComedorInstitucional','1200','120','20-11-18'
-EXEC CambioBeneficio '2015000009','Matricula','4000','400','17-11-18'
+EXEC CambioBeneficio '2015000009','Matricula','4000','400','17-11-18'*/
 
 
 DECLARE  @Prueba varchar(MAX) 
