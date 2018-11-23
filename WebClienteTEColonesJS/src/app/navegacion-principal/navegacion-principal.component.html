@@ -1,0 +1,44 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      opened="false">
+    <mat-toolbar>
+        <p> Opciones </p>
+    </mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item (click)="funcion()">
+        <button mat-button id="botonEstadisticas">
+          <p> Mis estadisticas </p>
+        </button>
+      </a>
+      <a mat-list-item>
+        <button mat-button id="botonPuntos">
+          <p> Cambio de puntos </p>
+        </button>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar-row color="primary">
+      <button
+        id="botonMenu"
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle();">
+        <mat-icon aria-label="Side nav toggle icon" color="#FFFFFF">menu</mat-icon>
+      </button>
+      <span>
+        <img src = "../assets/imagenes/TEColonesConFondoAzul.png" style="height:45px; width:250px"
+        routerLink="/navegacion-principal"/>
+      </span>
+      <span class="example-spacer"></span>
+      <mat-icon  class="example-icon">contact_support</mat-icon>
+      <mat-icon  class="example-icon">account_circle</mat-icon>
+    </mat-toolbar-row>
+
+    <!-- Add Content Here -->
+  </mat-sidenav-content>
+</mat-sidenav-container>
+

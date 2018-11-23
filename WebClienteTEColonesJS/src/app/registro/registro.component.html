@@ -3,18 +3,18 @@
 <div>
 <form action="">
 
-
+  <img src = "../assets/imagenes/TEColonesSinFondo.png" style="height:80px; width: 450px"/>
   <h2 id="Registro">Registrarse</h2>
   <div>
     <input id="nombre" type="text" placeholder="Nombre" name="nombre">
     <input id="primerApellido" type="text" placeholder="Primer Apellido" name="primerApellido">
     <input id="segundoApellido" type="text" placeholder="Segundo Apellido" name="segundoApellido">
     <select id= "listBox" name="Sede">
-      <option value="" disabled selected hidden>Sede</option>
-      <option *ngFor="let sede of sedes">{{sede}}</option>
+      <option>Sede</option>
+      <option *ngFor="let sede of sedes">{{sede.NombreSedeXTEC}}</option>
     </select>
     <input id="carnet" type="text" placeholder="Carnet" name="carnet">
-    <input id="correo" type="text" placeholder="Correo" name="correo">
+    <input id="correo" type="email" placeholder="Correo" name="correo">
     <input id="contraseña" type="password" placeholder="Contraseña" name="contraseña">
     <input id="telefono" type="text" placeholder="Telefono" name="telefono">
     <input type="submit"  routerLink="/inicio-sesion" value="Crear Cuenta">

@@ -6,12 +6,12 @@
     border-radius: 5%
 }
 
-body{
+/*body{
     background: #DEDEDE;
     display: flex;
     min-height: 100vh;
 
-}
+}*/
 
 form{
     margin: auto;
@@ -27,8 +27,7 @@ form{
 
 #titulo1{
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 50px;
+    font-size: 25px;
 }
 
 #recuerdaContra{
@@ -58,4 +57,8 @@ input[type="submit"]{
     color: #FFFFFF;
     cursor: pointer;
     border-radius: 7%;
+}
+
+input[type="submit"]:hover{
+  background: #003d7f;
 }
