@@ -104,29 +104,98 @@
     <Content Include="TEColonesDB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TEColonesDB.Context.cs</LastGenOutput>
+      <DependentUpon>TEColonesDB.edmx</DependentUpon>
+    </Content>
+    <Content Include="TEColonesDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TEColonesDB.edmx</DependentUpon>
+      <LastGenOutput>TEColonesDB.cs</LastGenOutput>
     </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administrador.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="CambioBeneficioEstudiante.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CambioMaterialEstudiante.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CentroAcopio.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\CustomersController.cs" />
+    <Compile Include="Controllers\DepartamentoesController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\SedeXTECsController.cs" />
+    <Compile Include="Controllers\TipoMaterialsController.cs" />
+    <Compile Include="Controllers\TipoRolsController.cs" />
     <Compile Include="Controllers\TokenGenerator.cs" />
     <Compile Include="Controllers\TokenValidationHandler.cs" />
+    <Compile Include="Departamento.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EncargadoCentroAcopio.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Estudiante.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HistorialPromocion.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HistorialTipoBeneficio.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HistorialTipoMaterial.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InformacionBasica.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InformacionBasicaContacto.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\LoginRequest.cs" />
+    <Compile Include="Promocion.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SedeXTEC.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="TEColonesDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TEColonesDB.Context.tt</DependentUpon>
     </Compile>
+    <Compile Include="TEColonesDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="TEColonesDB.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TEColonesDB.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="TipoBeneficio.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TipoContacto.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TipoMaterial.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TipoRol.cs">
+      <DependentUpon>TEColonesDB.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -135,9 +204,9 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>TEColonesDB.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="TEColonesDB.edmx.diagram">
+    <Content Include="TEColonesDB.edmx.diagram">
       <DependentUpon>TEColonesDB.edmx</DependentUpon>
-    </None>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

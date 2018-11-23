@@ -156,3 +156,7 @@ C:\Users\Erick\Documents\GitHub\TEColones\WebApiTEColones\WebApiTEColones\obj\De
 C:\Users\Erick\Documents\GitHub\TEColones\WebApiTEColones\WebApiTEColones\obj\Debug\WebApiTEColones.csproj.CopyComplete
 C:\Users\Erick\Documents\GitHub\TEColones\WebApiTEColones\WebApiTEColones\obj\Debug\WebApiTEColones.dll
 C:\Users\Erick\Documents\GitHub\TEColones\WebApiTEColones\WebApiTEColones\obj\Debug\WebApiTEColones.pdb
+C:\Users\Erick\Documents\GitHub\TEColones\WebApiTEColones\WebApiTEColones\bin\EntityFramework.dll
+C:\Users\Erick\Documents\GitHub\TEColones\WebApiTEColones\WebApiTEColones\bin\EntityFramework.SqlServer.dll
+C:\Users\Erick\Documents\GitHub\TEColones\WebApiTEColones\WebApiTEColones\bin\EntityFramework.xml
+C:\Users\Erick\Documents\GitHub\TEColones\WebApiTEColones\WebApiTEColones\bin\EntityFramework.SqlServer.xml
