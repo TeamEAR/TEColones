@@ -26,8 +26,8 @@ namespace WebApiTEColones
         public string UbicacionSede { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CentroAcopio> CentroAcopios { get; set; }
+        public ICollection<CentroAcopio> CentroAcopios { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Estudiante> Estudiantes { get; set; }
+        public ICollection<Estudiante> Estudiantes { get; set; }
     }
 }

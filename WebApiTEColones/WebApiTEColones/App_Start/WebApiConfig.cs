@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using WebApiTEColones.Controllers;
 
 namespace WebApiTEColones
@@ -23,6 +24,10 @@ namespace WebApiTEColones
 
             //Elimino que el sistema devuelva en XML, sólo trabajaremos con JSON
             //config.Formatters.Remove(GlobalConfiguration.Configuration.Formatters.XmlFormatter);
+
+            //Habilitando CORS
+            var urlPermitidas = new EnableCorsAttribute("*","*","*");
+            config.EnableCors(urlPermitidas);
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
